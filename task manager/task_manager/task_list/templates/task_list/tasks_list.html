@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .task-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .task {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .completed-task {
+            background-color: #d9ffd9;
+        }
+
+        .add-task-form {
+            margin-top: 20px;
+        }
+
+         form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="task-container">
+
+
+
+   <div class="add-task-form">
+        <h2>Add New Task</h2>
+      
+        <form method="post" action="{% url 'create_task' %}">
+            {% csrf_token %}
+            <label for="title">Title:</label>
+            <input type="text" name="title" >
+            <label for="description">Description:</label>
+            <textarea name="description"></textarea>
+            <label for="data">Due Date:</label>
+            <input type="date" name="data">
+          <label for="completed">Status:</label>
+        <select name="completed">
+            <option value="1">Completed</option>
+            <option value="0">Pending</option>
+        </select>
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+    <h1>Task List</h1>
+
+    {% if task_list %}
+        {% for task in task_list %}
+            <div class="task {% if task.completed %}completed-task{% endif %}">
+                <h2>{{ task.Title }}</h2>
+                <p>{{ task.Description }}</p>
+                <p><strong>Due Date:</strong> {{ task.Data }}</p>
+                <p><strong>Status:</strong> {% if task.completed %}Completed{% else %}Pending{% endif %}</p>
+                <button><a href="{% url 'details_task' pk=task.pk %}">View Details</a></button>
+                <button> <a href="{% url 'delete_task' pk=task.pk %}">Delete Task</a></button>
+                <hr>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No tasks available.</p>
+    {% endif %}
+
+
+</div>
+
+</body>
+</html>
